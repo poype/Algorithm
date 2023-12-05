@@ -3,7 +3,7 @@ from typing import List
 
 class Solution(object):
     def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
-        candidates.sort()
+        candidates.sort()  # 这个排序是有必要的，可以避免[1, 2] [2, 1]这种情况出现
         return self.combination(0, candidates, target)
 
     def combination(self, start: int, candidates: List[int], target: int) -> List[List[int]]:
