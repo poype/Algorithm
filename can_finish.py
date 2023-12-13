@@ -14,10 +14,10 @@ class GraphNode(object):
 
 class Solution:
     def __init__(self):
-        self.flag_list = None  # 为了避免重复计算
+        self.dfs_help_list = None  # 为了避免重复计算
 
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        self.flag_list = [None for _ in range(numCourses)]
+        self.dfs_help_list = [None for _ in range(numCourses)]
 
         course_list = []
         for i in range(numCourses):
@@ -35,21 +35,21 @@ class Solution:
 
     def dfs(self, course_node: GraphNode, visited: Set) -> bool:   # 方法参数的类型是GraphNode
         """遇到访问过的节点就证明有环，有环返回True"""
-        if self.flag_list[course_node.course] is not None:
-            return self.flag_list[course_node.course]
+        if self.dfs_help_list[course_node.course] is not None:
+            return self.dfs_help_list[course_node.course]
 
         if visited.__contains__(course_node.course):
-            self.flag_list[course_node.course] = True
+            self.dfs_help_list[course_node.course] = True
             return True
         visited.add(course_node.course)
 
         for post_course in course_node.post_courses:
             if self.dfs(post_course, visited):
-                self.flag_list[course_node.course] = True
+                self.dfs_help_list[course_node.course] = True
                 return True
 
         visited.remove(course_node.course)  # 注意这里还要remove节点，这个节点已经访问过了，要为访问下一个节点做准备
-        self.flag_list[course_node.course] = False
+        self.dfs_help_list[course_node.course] = False
         return False
 
 
