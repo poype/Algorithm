@@ -23,6 +23,14 @@ class Solution:
         step_counter = StepCounter()
         for i in range(len(matrix)):
             for j in range(len(matrix[0])):
+                if j > 0 and matrix[i][j] > matrix[i][j - 1]:
+                    continue
+                if j < len(matrix[0]) - 1 and matrix[i][j] > matrix[i][j + 1]:
+                    continue
+                if i > 0 and matrix[i][j] > matrix[i - 1][j]:
+                    continue
+                if i < len(matrix) - 1 and matrix[i][j] > matrix[i + 1][j]:
+                    continue
                 self.dfs(matrix, i, j, step_counter)
 
         return step_counter.max_step_count + 1
