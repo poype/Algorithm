@@ -14,8 +14,7 @@ class GraphNode:
 class Solution:
     def __init__(self):
         self.word_node_dict = {}
-        self.steps = 0
-        self.max_steps = 99999999
+        self.cache_dict = {}
 
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
         all_word_list = []
@@ -31,29 +30,32 @@ class Solution:
                     self.add_neighbor_for_both_word(word, another_word)
 
         begin_word_node = self.word_node_dict[beginWord]
-        self.dfs(begin_word_node, endWord, set())
-
-        if self.max_steps == 99999999:
+        min_steps = self.dfs(begin_word_node, endWord, set())
+        if min_steps == 99999999:
             return 0
-        return self.max_steps
+        return min_steps
 
-    def dfs(self, current_node: GraphNode, end_word: str, trace: Set):
-        self.steps += 1
+    def dfs(self, current_node: GraphNode, end_word: str, trace: Set) -> int:
+        if self.cache_dict.__contains__(current_node.val):
+            return self.cache_dict[current_node.val]
+
         trace.add(current_node.val)
         if current_node.val == end_word:
-            if self.steps < self.max_steps:
-                self.max_steps = self.steps
-            self.steps -= 1
             trace.remove(current_node.val)
-            return
+            self.cache_dict[current_node.val] = 1
+            return 1
 
+        min_steps_from_current_node = 99999999
         for neighbor in current_node.neighbors:
             if trace.__contains__(neighbor.val):
                 continue
-            self.dfs(neighbor, end_word, trace)
+            steps = self.dfs(neighbor, end_word, trace)
+            if steps + 1 < min_steps_from_current_node:
+                min_steps_from_current_node = steps + 1
 
-        self.steps -= 1
         trace.remove(current_node.val)
+        self.cache_dict[current_node.val] = min_steps_from_current_node
+        return min_steps_from_current_node
 
     def create_or_get_graph_node(self, val: str) -> GraphNode:
         if not self.word_node_dict.__contains__(val):
@@ -79,4 +81,5 @@ class Solution:
 
 
 s = Solution()
-print(s.ladderLength("qa", "sq", ["si","go","se","cm","so","ph","mt","db","mb","sb","kr","ln","tm","le","av","sm","ar","ci","ca","br","ti","ba","to","ra","fa","yo","ow","sn","ya","cr","po","fe","ho","ma","re","or","rn","au","ur","rh","sr","tc","lt","lo","as","fr","nb","yb","if","pb","ge","th","pm","rb","sh","co","ga","li","ha","hz","no","bi","di","hi","qa","pi","os","uh","wm","an","me","mo","na","la","st","er","sc","ne","mn","mi","am","ex","pt","io","be","fm","ta","tb","ni","mr","pa","he","lr","sq","ye"]))
+print(s.ladderLength("hit", "cog", ["hot","dot","dog","lot","log"]))
+# print(s.ladderLength("qa", "sq", ["si","go","se","cm","so","ph","mt","db","mb","sb","kr","ln","tm","le","av","sm","ar","ci","ca","br","ti","ba","to","ra","fa","yo","ow","sn","ya","cr","po","fe","ho","ma","re","or","rn","au","ur","rh","sr","tc","lt","lo","as","fr","nb","yb","if","pb","ge","th","pm","rb","sh","co","ga","li","ha","hz","no","bi","di","hi","qa","pi","os","uh","wm","an","me","mo","na","la","st","er","sc","ne","mn","mi","am","ex","pt","io","be","fm","ta","tb","ni","mr","pa","he","lr","sq","ye"]))
