@@ -7,14 +7,18 @@ class RandomizedSet:
     def __init__(self):
         # key是数字val，value是数字在数组中的下标
         self.num_map_index = {}
-        self.num_list = [0 for _ in range(2 * 100000)]
+        self.num_list = []
         self.size = 0
 
     def insert(self, val: int) -> bool:
         if val in self.num_map_index:
             return False
 
-        self.num_list[self.size] = val
+        if self.size == len(self.num_list):
+            self.num_list.append(val)
+        else:
+            self.num_list[self.size] = val
+
         self.num_map_index[val] = self.size
         self.size += 1
         return True
@@ -37,10 +41,9 @@ class RandomizedSet:
 
 
 rs = RandomizedSet()
+print(rs.insert(0))
 print(rs.insert(1))
-print(rs.remove(2))
+print(rs.remove(0))
 print(rs.insert(2))
-print(rs.getRandom())
 print(rs.remove(1))
-print(rs.insert(2))
 print(rs.getRandom())
