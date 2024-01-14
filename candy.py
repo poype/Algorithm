@@ -10,23 +10,22 @@ class Solution:
         while True:
             flag = False
 
-            for i in range(n - 1):
-                if ratings[i] > ratings[i + 1] and candy_list[i] <= candy_list[i + 1]:
-                    flag = True
-                    candy_list[i] = candy_list[i + 1] + 1
-
-            for i in range(n - 1, 0, -1):
+            for i in range(1, n):
                 if ratings[i] > ratings[i - 1] and candy_list[i] <= candy_list[i - 1]:
                     flag = True
                     candy_list[i] = candy_list[i - 1] + 1
 
+            for i in range(n - 2, -1, -1):
+                if ratings[i] > ratings[i + 1] and candy_list[i] <= candy_list[i + 1]:
+                    flag = True
+                    candy_list[i] = candy_list[i + 1] + 1
+
             if not flag:
                 break
 
-        print(candy_list)
         return sum(candy_list)
 
-s = Solution()
-ratings = [29,51,87,87,72,12]
-print(s.candy(ratings))
 
+s = Solution()
+ratings = [29, 51, 87, 87, 72, 12]
+print(s.candy(ratings))
