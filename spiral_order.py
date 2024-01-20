@@ -4,45 +4,36 @@ from typing import List
 
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        if not matrix:
+            return []
+
+        rows, cols = len(matrix), len(matrix[0])
+        top, bottom = 0, rows - 1
+        left, right = 0, cols - 1
         result = []
 
-        row_num = len(matrix)
-        column_num = len(matrix[0])
+        while top <= bottom and left <= right:
+            # 从左到右遍历上边界
+            for i in range(left, right + 1):
+                result.append(matrix[top][i])
+            top += 1
 
-        if column_num == 1:
-            for r in range(row_num):
-                result.append(matrix[r][0])
-            return result
+            # 从上到下遍历右边界
+            for i in range(top, bottom + 1):
+                result.append(matrix[i][right])
+            right -= 1
 
-        if row_num == 1:
-            for c in range(column_num):
-                result.append(matrix[0][c])
-            return result
+            # 从右到左遍历下边界
+            if top <= bottom:
+                for i in range(right, left - 1, -1):
+                    result.append(matrix[bottom][i])
+                bottom -= 1
 
-        n = min(row_num, column_num) // 2
-
-        for i in range(n):
-            for c in range(i, column_num - i - 1):
-                result.append(matrix[i][c])
-
-            for r in range(i, row_num - i - 1):
-                result.append(matrix[r][column_num - i - 1])
-
-            for c in range(column_num - i - 1, i, -1):
-                result.append(matrix[row_num - 1 - i][c])
-
-            for r in range(row_num - 1 - i, i, -1):
-                result.append(matrix[r][i])
-
-        if min(row_num, column_num) % 2 == 1:
-            if row_num < column_num:
-                r = row_num // 2
-                for c in range(r, column_num - r):
-                    result.append(matrix[r][c])
-            else:
-                c = column_num // 2
-                for r in range(c, row_num - c):
-                    result.append(matrix[r][c])
+                # 从下到上遍历左边界
+            if left <= right:
+                for i in range(bottom, top - 1, -1):
+                    result.append(matrix[i][left])
+                left += 1
 
         return result
 
