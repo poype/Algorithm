@@ -1,4 +1,6 @@
 # https://leetcode.cn/problems/clone-graph/description/
+import copy
+
 
 class Node:
     def __init__(self, val=0, neighbors=None):
@@ -80,3 +82,10 @@ s = Solution()
 new_node2 = s.cloneGraph(node1)
 
 print("end")
+
+
+class Solution2:
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        if node is None:
+            return None
+        return copy.deepcopy(node)
