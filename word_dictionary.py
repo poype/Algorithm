@@ -40,24 +40,16 @@ class WordDictionary:
                 for child_node in root.children.values():
                     if child_node.last_ch_flag:
                         return True
-                return False
-            else:
-                if word[idx] not in root.children:
-                    return False
-                if root.children[word[idx]].last_ch_flag:
-                    return True
-                return False
+            elif word[idx] in root.children and root.children[word[idx]].last_ch_flag:
+                return True
+            return False
 
         if word[idx] == '.':
             for child_node in root.children.values():
                 if self.__dfs__(child_node, word, idx + 1):
                     return True
-        else:
-            if word[idx] not in root.children:
-                return False
-            if self.__dfs__(root.children[word[idx]], word, idx + 1):
-                return True
-
+        elif word[idx] in root.children and self.__dfs__(root.children[word[idx]], word, idx + 1):
+            return True
         return False
 
 
@@ -65,7 +57,12 @@ wordDictionary = WordDictionary()
 wordDictionary.addWord("bad")
 wordDictionary.addWord("dad")
 wordDictionary.addWord("mad")
+wordDictionary.addWord("aaaaa")
+wordDictionary.addWord("lgmdudstfpdbjchspcixsqy")
+wordDictionary.addWord("mmmqbpzqyqvdczbrxr")
 print(wordDictionary.search("pad"))
 print(wordDictionary.search("bad"))
 print(wordDictionary.search(".ad"))
 print(wordDictionary.search("b.."))
+print(wordDictionary.search("aaaaa"))
+print(wordDictionary.search("mmmqbpzqyqdczbrxr"))
