@@ -2,12 +2,12 @@
 
 
 class TreeNode:
-    def __init__(self, root_val: str):
-        self.root = root_val
+    def __init__(self, val: str):
+        self.val = val
         self.children = {}
 
     def __add_child__(self, child: 'TreeNode'):
-        self.children[child.root] = child
+        self.children[child.val] = child
 
 
 class Trie:
@@ -20,12 +20,12 @@ class Trie:
     def insert(self, word: str) -> None:
         self.word_set.add(word)
 
-        node = self.__create_node__(word[0])
+        node = self.__create_node__(word[0], 0)
         self.root.__add_child__(node)
 
         parent_node = node
         for i in range(1, len(word)):
-            node = TreeNode(word[i])
+            node = self.__create_node__(word[i], i)
             parent_node.__add_child__(node)
             parent_node = node
 
@@ -41,10 +41,11 @@ class Trie:
 
         return True
 
-    def __create_node__(self, val: str):
-        if val not in self.node_dict:
-            self.node_dict[val] = TreeNode(val)
-        return self.node_dict[val]
+    def __create_node__(self, val: str, level: int):
+        key = f"{level}{val}"
+        if key not in self.node_dict:
+            self.node_dict[key] = TreeNode(val)
+        return self.node_dict[key]
 
 
 trie = Trie()
