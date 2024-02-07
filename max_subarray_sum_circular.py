@@ -4,33 +4,39 @@ from typing import List
 
 class Solution:
     def maxSubarraySumCircular(self, nums: List[int]) -> int:
-        whole_sum = sum(nums)
-        max_sum = whole_sum
-        total_cnt = len(nums)
+        m = len(nums)
+        dp = [[0 for _ in range(m)] for _ in range(m)]
+        max_val = nums[0]
 
-        if total_cnt == 1:
-            return max_sum
+        for k in range(m):
+            i, j = 0, k
+            while i < m - k:
+                if i == j:
+                    dp[i][j] = nums[i]
+                elif j - 1 == i:
+                    dp[i][j] = nums[i] + nums[j]
+                else:
+                    dp[i][j] = dp[i + 1][j - 1] + nums[i] + nums[j]
 
-        cnt = 1
-        loop_cnt = total_cnt // 2
-        if total_cnt % 2 == 1:
-            loop_cnt += 1
-
-        while cnt <= loop_cnt:
-            i = 0
-            while i <= total_cnt - cnt:
-                sum_val = sum(nums[i: i + cnt])
-                if sum_val > max_sum:
-                    max_sum = sum_val
-
-                if whole_sum - sum_val > max_sum:
-                    max_sum = whole_sum - sum_val
-
+                if dp[i][j] > max_val:
+                    max_val = dp[i][j]
                 i += 1
+                j += 1
 
-            cnt += 1
+        whole_sum = sum(nums)
+        for k in range(1, m):
+            i, j = k, 0
+            while i < m:
+                if i - 1 == j:
+                    dp[i][j] = whole_sum
+                else:
+                    dp[i][j] = whole_sum - dp[j + 1][i - 1]
+                if dp[i][j] > max_val:
+                    max_val = dp[i][j]
+                i += 1
+                j += 1
 
-        return max_sum
+        return max_val
 
 
 s = Solution()
