@@ -38,6 +38,7 @@ class Solution:
             return -1
         return cnt
 
+
 s = Solution()
 coins = [1]
 amount = 0
