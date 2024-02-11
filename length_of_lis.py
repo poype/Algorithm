@@ -1,29 +1,37 @@
 # https://leetcode.cn/problems/longest-increasing-subsequence/?envType=study-plan-v2&envId=top-interview-150
-from typing import List
+from typing import List, Optional
 
 
 class Solution:
-    def __init__(self):
-        self.max_length = 1
-
     def lengthOfLIS(self, nums: List[int]) -> int:
+        cache = [None for _ in range(len(nums))]
+
+        max_length = 1
         for i in range(len(nums)):
-            self.__lis__(nums, i, [])
+            val = self.__lis__(nums, i, cache)
+            if max_length < val:
+                max_length = val
 
-        return self.max_length
+        return max_length
 
-    def __lis__(self, nums: List[int], start: int, lis: List[int]):
-        lis.append(nums[start])
-        if len(lis) > self.max_length:
-            self.max_length = len(lis)
+    def __lis__(self, nums: List[int], start: int, cache: List[Optional[int]]) -> int:
+        if start == len(nums) - 1:
+            return 1
 
+        if cache[start] is not None:
+            return cache[start]
+
+        max_length = 0
         for i in range(start + 1, len(nums)):
             if nums[start] < nums[i]:
-                self.__lis__(nums, i, lis)
+                length = self.__lis__(nums, i, cache)
+                if max_length < length:
+                    max_length = length
 
-        lis.pop()
+        cache[start] = max_length + 1
+        return max_length + 1
 
 
 s = Solution()
-nums = [7, 7, 7, 7, 7, 7, 7]
+nums = [0, 1, 0, 3, 2, 3]
 print(s.lengthOfLIS(nums))
