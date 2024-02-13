@@ -5,12 +5,17 @@ from typing import List
 class Solution:
     def __init__(self):
         self.maximal_square = 0
+        self.cache = set()
 
     def maximalSquare(self, matrix: List[List[str]]) -> int:
         self.__maximal_square__(matrix, 0, 0, len(matrix) - 1, len(matrix[0]) - 1)
         return self.maximal_square
 
     def __maximal_square__(self, matrix: List[List[str]], start_row, start_column, end_row, end_column):
+        if f"{start_row}_{start_column}_{end_row}_{end_column}" in self.cache:
+            return
+        self.cache.add(f"{start_row}_{start_column}_{end_row}_{end_column}")
+
         row_length = end_row - start_row + 1
         column_length = end_column - start_column + 1
 
@@ -39,5 +44,5 @@ class Solution:
 
 
 s = Solution()
-matrix = [["0"]]
+matrix = [["1", "0", "1", "0", "0"], ["1", "0", "1", "1", "1"], ["1", "1", "1", "1", "1"], ["1", "0", "0", "1", "0"]]
 print(s.maximalSquare(matrix))
