@@ -12,10 +12,8 @@ class Solution:
 
         for i in range(len(nums)):
             num2 = target - nums[i]
-            index2 = index_dict.get(num2)
-
-            if index2 is not None:
-                return [index2, i]
+            if num2 in index_dict:
+                return [index_dict[num2], i]
 
             index_dict[nums[i]] = i
 
