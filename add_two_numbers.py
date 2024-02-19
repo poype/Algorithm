@@ -14,9 +14,7 @@ class Solution(object):
         p = head
         carry = 0
         while p1 is not None and p2 is not None:
-            q = ListNode((p1.val + p2.val + carry) % 10)
-            p.next = q
-            p = p.next
+            p = self.add_new_node(p, (p1.val + p2.val + carry))
             carry = 1 if (p1.val + p2.val + carry) >= 10 else 0
             p1 = p1.next
             p2 = p2.next
@@ -25,9 +23,7 @@ class Solution(object):
             p1 = p2
 
         while p1 is not None:
-            q = ListNode((p1.val + carry) % 10)
-            p.next = q
-            p = p.next
+            p = self.add_new_node(p, p1.val + carry)
             carry = 1 if (p1.val + carry) >= 10 else 0
             p1 = p1.next
 
@@ -36,6 +32,12 @@ class Solution(object):
             p.next = q
 
         return head.next
+
+    def add_new_node(self, p: ListNode, sum_val: int) -> ListNode:
+        q = ListNode(sum_val % 10)
+        p.next = q
+        p = p.next
+        return p
 
 
 l1 = ListNode(2)
