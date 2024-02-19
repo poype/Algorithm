@@ -10,7 +10,7 @@ class Solution(object):
         circle_length = num_rows - 1
         max_column_number = (len(s) // circle_char_number + 1) * circle_length
 
-        matrix = [['' for i in range(max_column_number)] for j in range(num_rows)]
+        matrix = [['' for _ in range(max_column_number)] for _ in range(num_rows)]
         p, i, j = 0, 0, 0
         while p < len(s):
             while i < num_rows and p < len(s):
@@ -34,8 +34,6 @@ class Solution(object):
 
         return result
 
+
 s = Solution()
 print(s.convert("A", 1))
-
-
-
