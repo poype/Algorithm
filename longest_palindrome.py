@@ -13,9 +13,9 @@ class Solution(object):
         max_length = 0
         result = ""
         # init matrix
-        self.matrix = [[None for i in range(len(s))] for j in range(len(s))]
+        self.matrix = [[None for _ in range(len(s))] for _ in range(len(s))]
         for i in range(len(s)):
-            for j in range(len(s) - 1, -1, -1):
+            for j in range(i, len(s)):
                 if self.is_palindrome(s, i, j) and j - i + 1 > max_length:
                     max_length = j - i + 1
                     result = s[i: j + 1]
