@@ -12,7 +12,7 @@ class Solution(object):
         unique_set.add(s[0])
 
         while end != len(s):
-            if not unique_set.__contains__(s[end]):
+            if s[end] not in unique_set:
                 unique_set.add(s[end])
                 if end - start + 1 > longest:
                     longest = end - start + 1
