@@ -20,7 +20,7 @@ class Solution(object):
         result = 0
         for roman in d.keys():
             while s.startswith(roman):
-                result += d.get(roman)
+                result += d[roman]
                 s = s.removeprefix(roman)
 
         return result
