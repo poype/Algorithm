@@ -6,7 +6,7 @@ class Solution(object):
         if len(s) == 0:
             return 0
 
-        map = {
+        ch_to_num_dict = {
             '0': 0,
             '1': 1,
             '2': 2,
@@ -32,8 +32,8 @@ class Solution(object):
 
         result, i = 0, 0
         while i < len(s):
-            num = map.get(s[i])
-            if num == None:
+            num = ch_to_num_dict.get(s[i])
+            if num is None:
                 break
 
             result = result * 10 + num
@@ -48,6 +48,7 @@ class Solution(object):
             return -(2 ** 31)
 
         return result
+
 
 s = Solution()
 print(s.myAtoi(""))
