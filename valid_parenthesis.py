@@ -25,8 +25,6 @@ class Solution(object):
 
         return len(stack) == 0
 
+
 s = Solution()
 print(s.isValid("(]"))
-
-
-
