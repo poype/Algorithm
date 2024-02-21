@@ -27,16 +27,17 @@ class Solution(object):
             return result
 
         if start_pos == len(digits) - 1:
-            return self.num_char_map.get(digits[start_pos])
+            return self.num_char_map[digits[start_pos]]
 
         sub_str_list = self.convertToChar(digits, start_pos + 1)
-        char_array = self.num_char_map.get(digits[start_pos])
+        char_array = self.num_char_map[digits[start_pos]]
 
         for i in range(len(char_array)):
             for j in range(len(sub_str_list)):
                 result.append(char_array[i] + sub_str_list[j])
 
         return result
+
 
 s = Solution()
 digits = "2"
