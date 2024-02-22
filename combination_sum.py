@@ -1,8 +1,12 @@
+# https://leetcode.cn/problems/combination-sum/description/
+
 from typing import List
+
 
 class Solution(object):
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
         return self.combination(0, candidates, target)
+
     # 如果没有这个start参数，那就变成排列了，会出现[3, 5]和[5, 3]这种重复数据
     # 为了计算组合，必须让计算向一个方向迭代，不能往会迭代，所以加了start这个参数
 
