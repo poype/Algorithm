@@ -7,29 +7,22 @@ class Solution:
         """
         Do not return anything, modify nums1 in-place instead.
         """
-        start_index = 0
-        for i in range(n):
-            start_index = self.insert(start_index, nums1, nums2[i], m + i) + 1
+        i, j = m - 1, n - 1
+        p = m + n - 1
 
-    def insert(self, start: int, nums1: List[int], target_num: int, merged_count: int) -> int:
-        """
-        :return: 元素被加入的index
-        """
-        i = start
-        while i < len(nums1):
-            if i >= merged_count:
-                nums1[i] = target_num
-                break
-            elif target_num < nums1[i]:
-                for j in range(len(nums1) - 2, i - 1, -1):
-                    nums1[j + 1] = nums1[j]
+        while i >= 0 and j >= 0:
+            if nums1[i] > nums2[j]:
+                nums1[p], nums1[i] = nums1[i], nums1[p]  # 交换
+                i -= 1
+            else:
+                nums1[p] = nums2[j]
+                j -= 1
+            p -= 1
 
-                nums1[i] = target_num
-                break
-
-            i += 1
-
-        return i
+        while j >= 0:
+            nums1[p] = nums2[j]
+            p -= 1
+            j -= 1
 
 
 s = Solution()
