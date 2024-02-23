@@ -5,27 +5,16 @@ from typing import List
 
 class Solution:
     def maxSubArray(self, nums: List[int]) -> int:
-        m = len(nums)
-        dp = [[0 for _ in range(m)] for _ in range(m)]
-        max_val = nums[0]
+        sum_val, max_sum = nums[0], nums[0]
+        for i in range(1, len(nums)):
+            if sum_val + nums[i] > nums[i]:
+                sum_val += nums[i]
+            else:
+                sum_val = nums[i]
 
-        for k in range(m):
-            i, j = 0, k
-            while i < m - k:
-                if i == j:
-                    dp[i][j] = nums[i]
-                elif j - 1 == i:
-                    dp[i][j] = nums[i] + nums[j]
-                else:
-                    dp[i][j] = dp[i + 1][j - 1] + nums[i] + nums[j]
-
-                if dp[i][j] > max_val:
-                    max_val = dp[i][j]
-
-                i += 1
-                j += 1
-
-        return max_val
+            if max_sum < sum_val:
+                max_sum = sum_val
+        return max_sum
 
 
 nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
