@@ -6,37 +6,24 @@ from typing import List
 
 class Solution:
     def removeDuplicates(self, nums: List[int]) -> int:
-        k, i = 0, 1
-
-        while i < len(nums):
-            # 如果只剩最后一个元素，或者不是两个连续相等的元素
-            if i == len(nums) - 1 or nums[i] != nums[i + 1]:
-                nums[k + 1] = nums[i]
-                k += 1
-                i += 1
-                continue
-
-            # 两个或两个以上连续相等的元素
-            i += 1
-
-            if nums[i] != nums[k]:
-                nums[k + 1] = nums[i - 1]
-                nums[k + 2] = nums[i]
+        # k指向列表头部，i扫描整个列表
+        k, i, n = 0, 0, len(nums)
+        while i < n:
+            if i < n - 1 and nums[i] == nums[i + 1]:
+                nums[k] = nums[i]
+                nums[k + 1] = nums[i + 1]
+                i += 2
+                while i < n and nums[i] == nums[k]:
+                    i += 1
                 k += 2
             else:
-                nums[k + 1] = nums[i - 1]
-                k += 1
-
-            i += 1
-
-            # 两个以上连续相同的元素，后面相同的元素直接跳过
-            while i < len(nums) and nums[i] == nums[k]:
+                nums[k] = nums[i]
                 i += 1
-
-        return k + 1
+                k += 1
+        return k
 
 
 s = Solution()
-l = [1,2,2,2]
+l = [0, 0, 1, 1, 1, 1, 2, 3, 3]
 print(s.removeDuplicates(l))
 print(l)
