@@ -8,17 +8,9 @@ class Solution:
         if n == 0:
             return 0
 
-        start, end = 0, 0
-        last_word = ""
-        for i in range(len(s)):
-            if s[i] == " ":
-                end = i - 1
-                last_word = s[start: end + 1]
-                start = i + 1
-            elif i == n - 1:
-                last_word = s[start: n]
+        word_list = s.split(" ")
+        return len(word_list[-1])
 
-        return len(last_word)
 
 s = Solution()
 print(s.lengthOfLastWord("luffy is still joyboy"))
