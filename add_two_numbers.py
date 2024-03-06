@@ -9,35 +9,32 @@ class ListNode(object):
 
 class Solution(object):
     def addTwoNumbers(self, l1, l2):
-        p1, p2 = l1, l2
         head = ListNode()
         p = head
         carry = 0
-        while p1 is not None and p2 is not None:
-            p = self.add_new_node(p, (p1.val + p2.val + carry))
-            carry = 1 if (p1.val + p2.val + carry) >= 10 else 0
-            p1 = p1.next
-            p2 = p2.next
 
-        if p1 is None:
-            p1 = p2
+        while l1 is not None and l2 is not None:
+            val = (carry + l1.val + l2.val) % 10
+            carry = (carry + l1.val + l2.val) // 10
+            p.next = ListNode(val)
+            p = p.next
+            l1 = l1.next
+            l2 = l2.next
 
-        while p1 is not None:
-            p = self.add_new_node(p, p1.val + carry)
-            carry = 1 if (p1.val + carry) >= 10 else 0
-            p1 = p1.next
+        if l1 is None:
+            l1 = l2
+
+        while l1 is not None:
+            val = (carry + l1.val) % 10
+            carry = (carry + l1.val) // 10
+            p.next = ListNode(val)
+            p = p.next
+            l1 = l1.next
 
         if carry > 0:
-            q = ListNode(carry)
-            p.next = q
+            p.next = ListNode(carry)
 
         return head.next
-
-    def add_new_node(self, p: ListNode, sum_val: int) -> ListNode:
-        q = ListNode(sum_val % 10)
-        p.next = q
-        p = p.next
-        return p
 
 
 l1 = ListNode(2)
@@ -47,10 +44,10 @@ l1c = ListNode(3)
 l1b.next = l1c
 
 l2 = ListNode(5)
-l2b = ListNode(6)
-l2.next = l2b
-l2c = ListNode(4)
-l2b.next = l2c
+# l2b = ListNode(6)
+# l2.next = l2b
+# l2c = ListNode(4)
+# l2b.next = l2c
 
 s = Solution()
 l3 = s.addTwoNumbers(l1, l2)
