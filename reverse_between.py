@@ -11,28 +11,28 @@ class ListNode:
 class Solution:
     def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
         head_head = ListNode()
-        head_head.next = head  # 所有链表的操作，如果没有独立的头节点，那就加上一个。否则边界问题很难考虑
+        head_head.next = head
 
-        i = head_head
+        p_left_pre = self.__get_p_of_pos__(head_head, left - 1)
+        p_left = self.__get_p_of_pos__(head_head, left)
+        p_right = self.__get_p_of_pos__(head_head, right)
+        p_right_next = p_right.next
 
-        for _ in range(1, left):
-            i = i.next
+        p = p_left.next
+        while p != p_right_next:
+            q = p.next
+            p.next = p_left_pre.next
+            p_left_pre.next = p
+            p = q
 
-        stack = []
-        j = i.next
-        for _ in range(left, right + 1):
-            if j is None:
-                break
-            stack.append(j)
-            j = j.next
-
-        while len(stack) > 0:
-            node = stack.pop()
-            i.next = node
-            i = i.next
-        i.next = j
-
+        p_left.next = p_right_next
         return head_head.next
+
+    def __get_p_of_pos__(self, head: ListNode, pos: int) -> ListNode:
+        p = head
+        for _ in range(pos):
+            p = p.next
+        return p
 
 
 node1 = ListNode(1)
