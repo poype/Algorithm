@@ -1,5 +1,5 @@
 # https://leetcode.cn/problems/reverse-nodes-in-k-group/
-from typing import Optional
+from typing import Optional, List
 
 
 class ListNode(object):
@@ -8,60 +8,55 @@ class ListNode(object):
         self.next = next
 
 
-# 算法思想是用两个指针p,q定位好一个段的起始地址和结束地址，然后用头插法逆转
 class Solution(object):
     def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
-        p = head
+        head_head = ListNode()
+        head_head.next = head
+        stack_list = []
 
-        temp_head = ListNode()
-        h = temp_head
+        p = head_head
+        start = head
+        end = self.__move_k_step__(start, k)
+        while end is not None:
+            next_start = end.next
+            stack_list.append(self.__split_group__(start, end))
+            start = next_start
+            end = self.__move_k_step__(start, k)
 
-        while p is not None:
-            q = p
-            # q指针往后走 k-1 步，指向一段的结束位置
-            q = self.move_k_steps(q, k - 1)
-            if q is None:
+        for i in range(len(stack_list)):
+            stack = stack_list[i]
+            while len(stack) > 0:
+                node = stack.pop()
+                p.next = node
+                p = p.next
+
+        p.next = start
+
+        return head_head.next
+
+    def __split_group__(self, start: ListNode, end: ListNode) -> List[ListNode]:
+        stack = []
+        p = start
+        while p != end:
+            stack.append(p)
+            p = p.next
+
+        stack.append(end)
+        return stack
+
+    def __move_k_step__(self, start: ListNode, k: int) -> Optional[ListNode]:
+        i, end = 1, start
+        while i < k:
+            if end is None:
                 break
 
-            # 记录下一段的开始地址
-            next_start = q.next
+            end = end.next
+            i += 1
 
-            # 头插法逆转
-            o = p
-            for i in range(k):
-                r = o.next
-                o.next = h.next
-                h.next = o
-                o = r
+        if i < k:
+            return None
 
-            # 原来p指针指向一段的第一个节点，经过逆转之后，p指针指向了该段的最后一个节点
-            # h指向逆转后本段的最后一个节点，作为下一段的头节点
-            h = p
-
-            p = next_start
-
-        # 可能还剩余几个节点无需逆转，要跟在链表的最后
-        h.next = p
-
-        return temp_head.next
-
-    def move_k_steps(self, p: ListNode, k: int) -> ListNode | None:
-        """
-        让一个指针向前走k步
-        :param p: 指针
-        :param k: 步数
-        :return: 如果剩余的节点足够让指针走k步，返回走k步后对应的指针。如果剩余的节点不足，返回None
-        """
-        if p is None:
-            return p
-
-        while k > 0:
-            p = p.next
-            if p is None:
-                return None
-            k -= 1
-
-        return p
+        return end
 
 
 l1 = ListNode(1)
@@ -73,16 +68,16 @@ l4 = ListNode(4)
 l3.next = l4
 l5 = ListNode(5)
 l4.next = l5
-l6 = ListNode(6)
-l5.next = l6
-l7 = ListNode(7)
-l6.next = l7
-l8 = ListNode(8)
-l7.next = l8
-l9 = ListNode(9)
-l8.next = l9
+# l6 = ListNode(6)
+# l5.next = l6
+# l7 = ListNode(7)
+# l6.next = l7
+# l8 = ListNode(8)
+# l7.next = l8
+# l9 = ListNode(9)
+# l8.next = l9
 
 s = Solution()
-result = s.reverseKGroup(l1, 4)
+result = s.reverseKGroup(l1, 2)
 
 print(result)
