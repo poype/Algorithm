@@ -8,28 +8,24 @@ class ListNode(object):
 
 
 class Solution(object):
-    def removeNthFromEnd(self, head, n):
-        p, q = head, head
-        i = 0
-        while i < n + 1:
-            q = q.next
-            i += 1
-            if q is None:
-                break
+    def removeNthFromEnd(self, head: ListNode, n: int):
+        head_head = ListNode()
+        head_head.next = head
 
-        # 这种情况，一定是删除链表的第一个节点
-        if i < (n + 1):
-            return head.next
+        cnt = 0
+        p = head
 
-        while q is not None:
-            q = q.next
+        while p is not None:
             p = p.next
+            cnt += 1
 
-        o = p.next
-        p.next = o.next
-        o.next = None
+        cnt = cnt - n
 
-        return head
+        p = head_head
+        for _ in range(cnt):
+            p = p.next
+        p.next = p.next.next
+        return head_head.next
 
 
 l1 = ListNode(1)
