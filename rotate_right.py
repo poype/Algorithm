@@ -10,41 +10,32 @@ class ListNode:
 class Solution:
     def rotateRight(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
         head_head = ListNode()
-        head_head.next = head  # 这个链表没有头节点，不用想别的，先给它增加一个头节点
+        head_head.next = head
 
-        p = head
         cnt = 0
+        p = head
         while p is not None:
             cnt += 1
             p = p.next
 
         if cnt == 0:
+            return None
+
+        k = k % cnt
+        if k == 0:
             return head
 
-        k = k % cnt  # k 可能大于链表的长度
+        p, q = head_head, head
+        for _ in range(1, k):
+            q = q.next
 
-        i, j = head_head, head_head
-        for _ in range(k):
-            j = j.next
+        while q.next is not None:
+            q = q.next
+            p = p.next
 
-        while j is not None:
-            j = j.next
-            i = i.next
-
-        k = head_head
-        while k.next != i:
-            k = k.next
-        k.next = None
-
-        stack = []
-        while i is not None:
-            stack.append(i)
-            i = i.next
-
-        while len(stack) > 0:
-            node = stack.pop()
-            node.next = head_head.next
-            head_head.next = node
+        q.next = head_head.next
+        head_head.next = p.next
+        p.next = None
 
         return head_head.next
 
