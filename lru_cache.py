@@ -1,66 +1,73 @@
-class LinkNode:
-    def __init__(self, key=0, val=0, next=None, prev=None):
+from typing import Optional
+
+
+class LinkNode(object):
+    def __init__(self, key: int, val: int, pre: Optional['LinkNode'], next: Optional['LinkNode']):
         self.key = key
         self.val = val
         self.next = next
-        self.prev = prev
+        self.pre = pre
 
 
 class LRUCache:
-
     def __init__(self, capacity: int):
         self.capacity = capacity
-        self.cache = {}  # 为了能让put和get在 O(1)内完成，使用dick
-        self.stack_head = LinkNode()
-        self.stack_head.next = self.stack_head
-        self.stack_head.prev = self.stack_head
+        self.head = LinkNode(0, 0, None, None)
+        self.map = {}
+        self.cnt = 0
 
     def get(self, key: int) -> int:
-        if key not in self.cache:
+        if key not in self.map:
             return -1
+        node = self.map[key]
 
-        p = self.cache[key]
-
-        p.prev.next = p.next
-        if p.next is not None:
-            p.next.prev = p.prev
-
-        if self.stack_head.prev == p:
-            self.stack_head.prev = p.prev
-
-        p.next = self.stack_head.next
-        p.prev = self.stack_head
-
-        self.stack_head.next.prev = p
-        self.stack_head.next = p
-        return p.val
+        self.__move_node_to_first__(node)
+        return node.val
 
     def put(self, key: int, value: int) -> None:
-        if key in self.cache:   # update
-            p = self.cache[key]
-            p.val = value
-            self.get(key)
-            return
+        if self.cnt == 0:
+            node = LinkNode(key, value, self.head, self.head)
+            self.map[key] = node
+            self.head.next = node
+            self.head.pre = node
+            self.cnt += 1
+        elif key in self.map:
+            node = self.map[key]
+            node.val = value
 
-        # add
-        p = LinkNode(key, value, self.stack_head.next, self.stack_head)
-        self.stack_head.next.prev = p
-        self.stack_head.next = p
+            self.__move_node_to_first__(node)
+        else:
+            node = LinkNode(key, value, self.head, self.head.next)
+            self.head.next.pre = node
+            self.head.next = node
+            self.map[key] = node
 
-        self.cache[key] = p
+            if self.cnt == self.capacity:
+                last_node = self.head.pre
+                last_node.pre.next = last_node.next
+                last_node.next.pre = last_node.pre
+                del self.map[last_node.key]
+            else:
+                self.cnt += 1
 
-        if len(self.cache) > self.capacity:
-            last = self.stack_head.prev
-            self.stack_head.prev = last.prev
-            last.prev.next = self.stack_head
+    def __move_node_to_first__(self, node):
+        node.pre.next = node.next
+        node.next.pre = node.pre
 
-            del self.cache[last.key]
+        node.next = self.head.next
+        node.pre = self.head
+
+        self.head.next.pre = node
+        self.head.next = node
 
 
 cache = LRUCache(2)
-cache.put(2, 1)
 cache.put(1, 1)
-cache.put(2, 3)
-cache.put(4, 1)
+cache.put(2, 2)
 print(cache.get(1))
+cache.put(3, 3)
 print(cache.get(2))
+cache.put(4, 4)
+print(cache.get(1))
+print(cache.get(3))
+print(cache.get(4))
