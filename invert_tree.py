@@ -13,17 +13,11 @@ class Solution:
     def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
         if root is None:
             return None
+        left_tree = self.invertTree(root.left)
+        right_tree = self.invertTree(root.right)
 
-        left_root, right_root = None, None
-        if root.left is not None:
-            left_root = self.invertTree(root.left)
-
-        if root.right is not None:
-            right_root = self.invertTree(root.right)
-
-        root.left = right_root
-        root.right = left_root
-
+        root.left = right_tree
+        root.right = left_tree
         return root
 
 
