@@ -2,34 +2,28 @@
 
 from typing import Optional
 
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
 
+
 class Solution:
     def isSymmetric(self, root: Optional[TreeNode]) -> bool:
         if root is None:
             return True
-        return self.is_same_tree(root.left, root.right)
 
-    def is_same_tree(self, p, q) -> bool:
-        if p is None and q is None:
+        return self.__is_symmetric__(root.left, root.right)
+
+    def __is_symmetric__(self, left_root: TreeNode, right_root: TreeNode) -> bool:
+        if left_root is None and right_root is None:
             return True
-        elif p is None:
+        elif left_root is None or right_root is None:
             return False
-        elif q is None:
+        elif left_root.val != right_root.val:
             return False
-
-        if p.val != q.val:
-            return False
-
-        if not self.is_same_tree(p.left, q.right):  # 这里是left 和 right去去比较
-            return False
-        if not self.is_same_tree(p.right, q.left):
-            return False
-
-        return True
-
-
+        else:
+            return (self.__is_symmetric__(left_root.left, right_root.right) and
+                    self.__is_symmetric__(left_root.right, right_root.left))
