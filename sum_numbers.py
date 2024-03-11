@@ -10,18 +10,20 @@ class TreeNode:
 
 class Solution:
     def __init__(self):
-        self.sum = 0
+        self.sum_val = 0
+
     def sumNumbers(self, root: Optional[TreeNode]) -> int:
-        self.traverse(root, 0)
-        return self.sum
+        self.__traverse__(root, 0)
+        return self.sum_val
 
-    def traverse(self, root: TreeNode, num: int):
-        num = num * 10 + root.val
-
+    def __traverse__(self, root: TreeNode, prefix_num: int):
+        num = prefix_num * 10 + root.val
         if root.left is None and root.right is None:
-            self.sum += num
+            self.sum_val += num
+            return
 
         if root.left is not None:
-            self.traverse(root.left, num)
+            self.__traverse__(root.left, num)
         if root.right is not None:
-            self.traverse(root.right, num)
+            self.__traverse__(root.right, num)
+
