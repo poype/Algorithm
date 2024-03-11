@@ -12,30 +12,27 @@ class Node:
 
 class Solution:
     def connect(self, root: Node) -> Optional[Node]:
-        if root is None:
-            return root
+        queue = []
+        if root is not None:
+            queue.append(root)
 
-        level = []
-        self.add_child_to_list(level, root)
+        while len(queue) > 0:
+            next_queue = []
 
-        while len(level) > 0:
-            next_level = []
-            for i in range(len(level) - 1):
-                self.add_child_to_list(next_level, level[i])
-                level[i].next = level[i + 1]
+            while len(queue) > 0:
+                tree_node = queue.pop(0)
+                if len(queue) > 0:
+                    tree_node.next = queue[0]
 
-            self.add_child_to_list(next_level, level[len(level) - 1])
+                if tree_node.left is not None:
+                    next_queue.append(tree_node.left)
 
-            level = next_level
+                if tree_node.right is not None:
+                    next_queue.append(tree_node.right)
+
+            queue = next_queue
 
         return root
-
-    def add_child_to_list(self, level: List[Node], node: Node):
-        if node.left is not None:
-            level.append(node.left)
-
-        if node.right is not None:
-            level.append(node.right)
 
 
 root = Node(0)
