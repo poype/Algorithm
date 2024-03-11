@@ -1,75 +1,69 @@
 # https://leetcode.cn/problems/binary-tree-maximum-path-sum/
 from typing import Optional, List
 
-# 思路是先向一棵树转换成一个无向图，然后计算无向图中从每个节点开始的max path
-# 这个代码会time limit，但是逻辑是对的  不再优化了
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
 
-
-class GraphNode:
-    def __init__(self, val: int):
-        self.val = val
-        self.neighbors = []
-
-    def add_neighbor(self, neighbor):
-        self.neighbors.append(neighbor)
-
-
+# 思路： 依次计算以树中每个节点为root的最大值，则这个最大值有下面几种可能：
+# 1. 经过root， max(left + root, right + root, left + right + root)
+# 2. 不经过root, max(left, right)
 class Solution:
     def __init__(self):
-        self.graph_node_list = []
-        self.max_sum = -99999999
+        self.max_val = -(2 ** 32)  # 最小值
 
     def maxPathSum(self, root: Optional[TreeNode]) -> int:
         if root is None:
             return 0
 
-        self.build_graph(root)
+        self.__traverse__(root)
+        return self.max_val
 
-        for graph_node in self.graph_node_list:
-            self.dfs(graph_node, 0, None)
+    def __traverse__(self, root: TreeNode) -> int:
+        if root.left is None and root.right is None:
+            if root.val > self.max_val:
+                self.max_val = root.val
+            return root.val
 
-        return self.max_sum
-
-    def dfs(self, current_node: GraphNode, sum_val: int, from_node: GraphNode):
-        sum_val += current_node.val
-        if sum_val > self.max_sum:
-            self.max_sum = sum_val
-
-        for neighbor in current_node.neighbors:
-            if neighbor == from_node:
-                continue
-            self.dfs(neighbor, sum_val, current_node)
-
-    def build_graph(self, root: TreeNode) -> GraphNode:
-        graph_node = self.create_graph_node(root.val)
+        left_max_val, right_max_val = -(2 ** 32), -(2 ** 32)
         if root.left is not None:
-            left_neighbor = self.build_graph(root.left)
-            graph_node.add_neighbor(left_neighbor)
-            left_neighbor.add_neighbor(graph_node)
+            left_max_val = self.__traverse__(root.left)
+
         if root.right is not None:
-            right_neighbor = self.build_graph(root.right)
-            graph_node.add_neighbor(right_neighbor)
-            right_neighbor.add_neighbor(graph_node)
+            right_max_val = self.__traverse__(root.right)
 
-        return graph_node
+        root_max_val = max(left_max_val, right_max_val, left_max_val + root.val,
+                           right_max_val + root.val, left_max_val + root.val + right_max_val, root.val)
+        if root_max_val > self.max_val:
+            self.max_val = root_max_val
 
-    def create_graph_node(self, val: int) -> GraphNode:
-        node = GraphNode(val)
-        self.graph_node_list.append(node)
-        return node
+        return max(left_max_val + root.val, right_max_val + root.val, root.val) # 注意这里return的值跟上面的max不一样
 
 
-tree_node1 = TreeNode(0)
-tree_node2 = TreeNode(1)
-tree_node3 = TreeNode(1)
+tree_node1 = TreeNode(5)
+tree_node2 = TreeNode(4)
+tree_node3 = TreeNode(8)
 
 tree_node1.left = tree_node2
 tree_node1.right = tree_node3
+
+tree_node4 = TreeNode(11)
+tree_node5 = TreeNode(13)
+tree_node6 = TreeNode(4)
+tree_node2.left = tree_node4
+tree_node3.left = tree_node5
+tree_node3.right = tree_node6
+
+tree_node7 = TreeNode(7)
+tree_node8 = TreeNode(2)
+tree_node9 = TreeNode(1)
+
+tree_node4.left = tree_node7
+tree_node4.right = tree_node8
+tree_node6.right = tree_node9
 
 s = Solution()
 print(s.maxPathSum(tree_node1))
