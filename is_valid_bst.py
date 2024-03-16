@@ -11,58 +11,48 @@ class TreeNode:
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
         if root is None:
-            return True
+            return False
 
-        return self.is_valid_bts(root)
+        is_valid, maximum, minimum = self.__is_valid_bst__(root) # 一次接收函数返回的多个值
+        return is_valid
 
-    def is_valid_bts(self, root: TreeNode) -> bool:
+    def __is_valid_bst__(self, root: TreeNode) -> (bool, int, int):  # 一次返回多个结果
+        """
+        :return: (是否是BST，最大值，最小值)
+        """
+        if root.left is None and root.right is None:
+            return True, root.val, root.val
+
+        minimum, maximum = root.val, root.val
         if root.left is not None:
-            left_max = self.get_max_value_of_root(root.left)
-            if root.val <= left_max:
-                return False
-            if not self.is_valid_bts(root.left):
-                return False
+            left_valid, left_maximum, left_minimum = self.__is_valid_bst__(root.left)
+            if not left_valid:
+                return False, -1, -1
+            if root.val <= left_maximum:
+                return False, -1, -1
+            minimum = left_minimum
 
         if root.right is not None:
-            right_min = self.get_min_value_of_root(root.right)
-            if root.val >= right_min:
-                return False
-            if not self.is_valid_bts(root.right):
-                return False
+            right_valid, right_maximum, right_minimum = self.__is_valid_bst__(root.right)
+            if not right_valid:
+                return False, -1, -1
+            if root.val >= right_minimum:
+                return False, -1, -1
+            maximum = right_maximum
 
-        return True
-
-    def get_max_value_of_root(self, root: TreeNode) -> int:
-        """
-        获取以root为根节点的子树中的最大值
-        """
-        left_max, right_max = -9999999999, -9999999999
-        if root.left is not None:
-            left_max = self.get_max_value_of_root(root.left)
-        if root.right is not None:
-            right_max = self.get_max_value_of_root(root.right)
-
-        return max(root.val, left_max, right_max)
-
-    def get_min_value_of_root(self, root: TreeNode) -> int:
-        """
-        获取以root为根节点的子树中的最小值
-        """
-        left_min, right_min = 9999999999, 9999999999
-        if root.left is not None:
-            left_min = self.get_min_value_of_root(root.left)
-        if root.right is not None:
-            right_min = self.get_min_value_of_root(root.right)
-
-        return min(root.val, left_min, right_min)
+        return True, maximum, minimum
 
 
-tnode1 = TreeNode(1)
-tnode2 = TreeNode(2)
-tnode3 = TreeNode(3)
+tnode1 = TreeNode(5)
+tnode2 = TreeNode(1)
+tnode3 = TreeNode(4)
+tnode4 = TreeNode(3)
+tnode5 = TreeNode(6)
 
-tnode2.left = tnode1
-tnode2.right = tnode3
+tnode1.left = tnode2
+tnode1.right = tnode3
+tnode3.left = tnode4
+tnode3.right = tnode5
 
 s = Solution()
-print(s.isValidBST(tnode2))
+print(s.isValidBST(tnode1))
