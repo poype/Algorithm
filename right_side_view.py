@@ -10,29 +10,28 @@ class TreeNode:
 
 
 class Solution:
-    def __init__(self):
-        self.result = []
-
     def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
-        if root is not None:
-            queue = [root]
-            self.__traverse__(queue)
-        return self.result
+        result = []
 
-    def __traverse__(self, queue: List[TreeNode]):
-        self.result.append(queue[len(queue) - 1].val)
+        if root is None:
+            return result
 
-        next_queue = []
+        queue = [root]
         while len(queue) > 0:
-            node = queue.pop(0)
-            if node.left is not None:
-                next_queue.append(node.left)
-            if node.right is not None:
-                next_queue.append(node.right)
+            next_queue = []
+            result.append(queue[-1].val)
 
-        if len(next_queue) > 0:
-            self.__traverse__(next_queue)
+            while len(queue) > 0:
+                node = queue.pop(0)
+                if node.left is not None:
+                    next_queue.append(node.left)
 
+                if node.right is not None:
+                    next_queue.append(node.right)
+
+            queue = next_queue
+
+        return result
 
 
 
