@@ -3,46 +3,38 @@ from typing import List
 
 
 class Solution:
-    def __init__(self):
-        self.flag = [[]]
-
     def numIslands(self, grid: List[List[str]]) -> int:
-        m = len(grid)  # 行数
-        if m == 0:
-            return 0
+        m = len(grid)
+        n = len(grid[0])
 
-        n = len(grid[0])  # 列数
+        flag = [[False for _ in range(n)] for _ in range(m)]
 
-        self.flag = [[False for _ in range(n)] for _ in range(m)]
-
-        island_num = 0
+        cnt = 0
         for i in range(m):
             for j in range(n):
-                if grid[i][j] == '1' and not self.flag[i][j]:
-                    island_num += 1
-                self.dfs(grid, i, j, m, n, -1, -1)
-        return island_num
+                if grid[i][j] == '1' and not flag[i][j]:
+                    cnt += 1
+                    self.__dfs__(grid, i, j, flag)
 
-    def dfs(self, grid: List[List[str]], i: int, j: int, m: int, n: int, from_i: int, from_j: int):
-        if grid[i][j] == '0':
-            return
+        return cnt
 
-        if self.flag[i][j]:
-            return
+    def __dfs__(self, grid: List[List[str]], row: int, column: int, flag: List[List[bool]]):
+        flag[row][column] = True
 
-        self.flag[i][j] = True
+        if column < len(grid[0]) - 1 and grid[row][column + 1] == '1' and not flag[row][column + 1]:
+            self.__dfs__(grid, row, column + 1, flag)
 
-        if i > 0 and grid[i - 1][j] == '1' and (i - 1) != from_i:
-            self.dfs(grid, i - 1, j, m, n, i, j)
-        if j < n - 1 and grid[i][j + 1] == '1' and (j + 1) != from_j:
-            self.dfs(grid, i, j + 1, m, n, i, j)
-        if i < m - 1 and grid[i + 1][j] == '1' and (i + 1) != from_i:
-            self.dfs(grid, i + 1, j, m, n, i, j)
-        if j > 0 and grid[i][j - 1] == '1' and (j - 1) != from_j:
-            self.dfs(grid, i, j - 1, m, n, i, j)
+        if row < len(grid) - 1 and grid[row + 1][column] == '1' and not flag[row + 1][column]:
+            self.__dfs__(grid, row + 1, column, flag)
+
+        if column > 0 and grid[row][column - 1] == '1' and not flag[row][column - 1]:
+            self.__dfs__(grid, row, column - 1, flag)
+
+        if row > 0 and grid[row - 1][column] == '1' and not flag[row - 1][column]:
+            self.__dfs__(grid, row - 1, column, flag)
 
 
 s = Solution()
-grid = [["1"],["1"]]
+grid = [["1"], ["1"]]
 
 print(s.numIslands(grid))
