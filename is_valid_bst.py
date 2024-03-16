@@ -27,17 +27,17 @@ class Solution:
         if root.left is not None:
             left_valid, left_maximum, left_minimum = self.__is_valid_bst__(root.left)
             if not left_valid:
-                return False, -1, -1
+                return False, None, None
             if root.val <= left_maximum:
-                return False, -1, -1
+                return False, None, None
             minimum = left_minimum
 
         if root.right is not None:
             right_valid, right_maximum, right_minimum = self.__is_valid_bst__(root.right)
             if not right_valid:
-                return False, -1, -1
+                return False, None, None
             if root.val >= right_minimum:
-                return False, -1, -1
+                return False, None, None
             maximum = right_maximum
 
         return True, maximum, minimum
