@@ -13,30 +13,35 @@ class Solution:
         if root is None:
             return result
 
-        node_stack = []
-        node_stack.append(root)
-        flag = 0
-        while len(node_stack) > 0:
-            num_list = []
-            new_node_stack = []
-            while len(node_stack) > 0:
-                tree_node = node_stack.pop()
-                num_list.append(tree_node.val)
+        queue = [root]
+        flag = False
+        while len(queue) > 0:
+            next_queue = []
+            result.append(self.__convert__(queue))
 
-                if flag % 2 == 1:
-                    if tree_node.right is not None:
-                        new_node_stack.append(tree_node.right)
-                    if tree_node.left is not None:
-                        new_node_stack.append(tree_node.left)
+            while len(queue) > 0:
+                node = queue.pop()
+                if flag:
+                    if node.left is not None:
+                        next_queue.append(node.left)
+
+                    if node.right is not None:
+                        next_queue.append(node.right)
                 else:
-                    if tree_node.left is not None:
-                        new_node_stack.append(tree_node.left)
-                    if tree_node.right is not None:
-                        new_node_stack.append(tree_node.right)
+                    if node.right is not None:
+                        next_queue.append(node.right)
 
-            result.append(num_list)
-            flag += 1
-            node_stack = new_node_stack
+                    if node.left is not None:
+                        next_queue.append(node.left)
+
+            flag = not flag
+
+            queue = next_queue
 
         return result
 
+    def __convert__(self, queue: List[TreeNode]):
+        num_queue = []
+        for node in queue:
+            num_queue.append(node.val)
+        return num_queue
