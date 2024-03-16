@@ -8,26 +8,38 @@ class TreeNode:
         self.val = val
         self.left = left
         self.right = right
+
+
 class Solution:
-    def levelOrder(self, root: Optional[TreeNode]) -> list[list[TreeNode]]:
-        if root is None:
-            return []
-
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
         result = []
-        level_node = [root]
-        while len(level_node) > 0:
-            level_num = []
-            for e in level_node:
-                level_num.append(e.val)
-            result.append(level_num)
+        if root is None:
+            return result
 
-            next_level_node = []
-            while len(level_node) > 0:
-                node = level_node.pop(0)
+        queue = [root]
+        while len(queue) > 0:
+            result.append(self.__convert__(queue))
+
+            next_queue = []
+            while len(queue) > 0:
+                node = queue.pop(0)
+
                 if node.left is not None:
-                    next_level_node.append(node.left)
+                    next_queue.append(node.left)
                 if node.right is not None:
-                    next_level_node.append(node.right)
+                    next_queue.append(node.right)
 
-            level_node = next_level_node
+            queue = next_queue
+
         return result
+
+    def __convert__(self, queue: List[TreeNode]):
+        num_queue = []
+        for node in queue:
+            num_queue.append(node.val)
+        return num_queue
+
+
+root = TreeNode(1)
+s = Solution()
+s.levelOrder(root)
