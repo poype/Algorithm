@@ -17,7 +17,7 @@ class GraphNode(object):
 
 class Solution:
     def __init__(self):
-        self.graph = {1: GraphNode(1)}
+        self.graph = {}
         self.visited = []
 
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:

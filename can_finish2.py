@@ -2,51 +2,61 @@
 
 from typing import List
 
+
 # 拓扑排序版本实现
 # 思路是找到入度为0的节点，然后断后与后面节点的链接，并把后面节点的入读都减1
 # 最后判断是否所有节点的入度都是0，如果都是0就代表全部课程都能学完，否则就是图有环
 
 class GraphNode(object):
-    def __init__(self, course: int):
-        self.course = course
-        self.post_courses = []
+    def __init__(self, val: int):
+        self.val = val
+        self.neighbors = []
+        self.in_degree = 0
 
-    def add_post_course(self, course_node):
-        self.post_courses.append(course_node)
+    def add_neighbor(self, neighbor_node: 'GraphNode'):
+        self.neighbors.append(neighbor_node)
 
 
 class Solution:
+    def __init__(self):
+        self.graph = {}
+
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        # 记录每个课程的入度
-        course_in_degree_list = [0 for _ in range(numCourses)]
-        course_list = []
-        for i in range(numCourses):
-            course_list.append(GraphNode(i))
+        for item in prerequisites:
+            self.__build_relation__(item[0], item[1])
 
-        for relation in prerequisites:  # 构造图
-            pre_course = course_list[relation[0]]
-            post_course = course_list[relation[1]]
-            pre_course.add_post_course(post_course)
-            course_in_degree_list[relation[1]] += 1
+        studied_course = set()
+        while True:
+            flag = False
+            for node in self.graph.values():
+                if node.in_degree > 0 or node.val in studied_course:
+                    continue
 
-        for i in range(len(course_in_degree_list)):
-            queue = []
-            if course_in_degree_list[i] == 0:
-                queue.append(i)
-                while len(queue) > 0:
-                    study_course = queue.pop()
-                    post_courses = course_list[study_course].post_courses
-                    while len(post_courses) > 0:
-                        post_course = post_courses.pop()  # 使用pop是为了断开这个链接，必须要断开链接，否则会重复计算
-                        course_in_degree_list[post_course.course] -= 1
-                        if course_in_degree_list[post_course.course] == 0:
-                            queue.append(post_course.course)
+                flag = True
+                studied_course.add(node.val)
 
-        for in_degree in course_in_degree_list:
-            if in_degree != 0:
+                for neighbor_node in node.neighbors:
+                    neighbor_node.in_degree -= 1
+
+            if not flag:
+                break
+
+        for node in self.graph.values():
+            if node.in_degree > 0:
                 return False
         return True
 
+    def __build_relation__(self, val1: int, val2: int):
+        node1 = self.__get_or_create_node__(val1)
+        node2 = self.__get_or_create_node__(val2)
+        node1.add_neighbor(node2)
+        node2.in_degree += 1
+
+    def __get_or_create_node__(self, val: int):
+        if val not in self.graph:
+            self.graph[val] = GraphNode(val)
+        return self.graph[val]
+
 
 s = Solution()
-print(s.canFinish(3, [[0,1],[0,2],[1,2]]))
+print(s.canFinish(1, []))
