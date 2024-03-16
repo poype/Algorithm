@@ -14,6 +14,7 @@ class GraphNode:
 class Solution:
     def __init__(self):
         self.graph: Dict[str, GraphNode] = {}
+        self.cache: Dict[str, int] = {}
 
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
         if endWord not in wordList:
@@ -37,7 +38,12 @@ class Solution:
         return minimum_steps + 1
 
     def __dfs__(self, begin_word: str, end_word: str, trace_stack: List[str]) -> int:
+        key = f"{begin_word}_{end_word}"
+        if key in self.cache:
+            return self.cache[key]
+
         if begin_word == end_word:
+            self.cache[key] = 1
             return 1
 
         trace_stack.append(begin_word)
@@ -56,8 +62,10 @@ class Solution:
         trace_stack.pop()
 
         if minimum_steps == 2 ** 32 - 1:
+            self.cache[key] = -1
             return -1
 
+        self.cache[key] = minimum_steps + 1
         return minimum_steps + 1
 
     def __build_relation__(self, val1: str, val2: str):
@@ -82,4 +90,10 @@ class Solution:
 
 
 s = Solution()
-print(s.ladderLength("qa", "sq", ["si","go","se","cm","so","ph","mt","db","mb","sb","kr","ln","tm","le","av","sm","ar","ci","ca","br","ti","ba","to","ra","fa","yo","ow","sn","ya","cr","po","fe","ho","ma","re","or","rn","au","ur","rh","sr","tc","lt","lo","as","fr","nb","yb","if","pb","ge","th","pm","rb","sh","co","ga","li","ha","hz","no","bi","di","hi","qa","pi","os","uh","wm","an","me","mo","na","la","st","er","sc","ne","mn","mi","am","ex","pt","io","be","fm","ta","tb","ni","mr","pa","he","lr","sq","ye"]))
+print(s.ladderLength("qa", "sq",
+                     ["si", "go", "se", "cm", "so", "ph", "mt", "db", "mb", "sb", "kr", "ln", "tm", "le", "av", "sm",
+                      "ar", "ci", "ca", "br", "ti", "ba", "to", "ra", "fa", "yo", "ow", "sn", "ya", "cr", "po", "fe",
+                      "ho", "ma", "re", "or", "rn", "au", "ur", "rh", "sr", "tc", "lt", "lo", "as", "fr", "nb", "yb",
+                      "if", "pb", "ge", "th", "pm", "rb", "sh", "co", "ga", "li", "ha", "hz", "no", "bi", "di", "hi",
+                      "qa", "pi", "os", "uh", "wm", "an", "me", "mo", "na", "la", "st", "er", "sc", "ne", "mn", "mi",
+                      "am", "ex", "pt", "io", "be", "fm", "ta", "tb", "ni", "mr", "pa", "he", "lr", "sq", "ye"]))
